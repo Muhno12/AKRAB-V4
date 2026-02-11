@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Admin ON/OFF Produk</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{ background:#f7f7f7; }
+    .cardx{ background:#fff;border-radius:14px;border:1px solid #eee;padding:14px; }
+    .nm{ font-weight:900;font-size:13px;margin:0; }
+    .sub{ font-size:12px;color:#666;margin:0; }
+    .pill{ font-size:11px;font-weight:900;border-radius:999px;padding:4px 10px;display:inline-block; }
+    .on{ background:#e7ffe8;color:#0a7a12;border:1px solid #c9f5cc; }
+    .off{ background:#ffe9e9;color:#a50f0f;border:1px solid #ffd0d0; }
+  </style>
+</head>
+<body class="p-3">
+  <div class="container" style="max-width:760px;">
+    <div class="cardx mb-3">
+      <h5 class="mb-1" style="font-weight:900;">Admin ON/OFF Produk</h5>
+      <div class="text-muted" style="font-size:13px;">Akses: <b>/admin.html</b> (host Vercel). Status disimpan di Upstash.</div>
+      <hr>
+      <div class="row g-2">
+        <div class="col-12">
+          <label class="form-label">Token API BukaOlshop</label>
+          <input id="tokenapi" class="form-control" value="eyJhcHAiOiIxNjMwMTciLCJhdXRoIjoiMjAyNDA5MTAiLCJzaWduIjoiU2JmTEdJcTFpb0h1OVBTU3hqMzVPdz09In0=">
+        </div>
+        <div class="col-12">
+          <label class="form-label">ID Kategori Akrab (contoh 715335)</label>
+          <input id="idKategori" class="form-control" value="715335">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Admin Key</label>
+          <input id="adminKey" class="form-control" placeholder="Masukkan ADMIN_KEY (sama seperti env di Vercel)">
+        </div>
+        <div class="col-12 d-flex gap-2 mt-1">
+          <button class="btn btn-primary w-100" onclick="loadAll()">Load Produk</button>
+          <button class="btn btn-outline-secondary w-100" onclick="refreshStatus()">Refresh Status</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cardx mb-2">
+      <input id="q" class="form-control" placeholder="Cari nama produk..." oninput="render()">
+    </div>
+
+    <div class="d-flex gap-2 mb-2">
+      <button class="btn btn-sm btn-outline-danger w-100" onclick="setAll('OFF')">OFF Semua</button>
+      <button class="btn btn-sm btn-outline-success w-100" onclick="setAll('ON')">ON Semua</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+<script>
+  const BASE = ""; // karena api & halaman sama-sama di Vercel
+
+  let products = [];
+  let statusMap = {};
+
+  function norm(s){ return (s||"").toLowerCase().replace(/\s+/g," ").trim(); }
+
+  async function getJSON(url){
+    const r = await fetch(url);
+    const j = await r.json();
+    if(!r.ok || j?.ok === false) throw new Error(j?.msg || "Error");
+    return j;
+  }
+
+  async function postJSON(url, body){
+    const key = document.getElementById("adminKey").value.trim();
+    if(!key) throw new Error("Admin Key wajib diisi");
+
+    const r = await fetch(url, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-admin-key": key
+      },
+      body: JSON.stringify(body)
+    });
+    const j = await r.json();
+    if(!r.ok || j?.ok === false) throw new Error(j?.msg || "Error");
+    return j;
+  }
+
+  function toast(msg){
+    const d = document.createElement("div");
+    d.className = "alert alert-info p-2";
+    d.style.position="fixed"; d.style.right="12px"; d.style.top="12px"; d.style.zIndex=9999;
+    d.style.fontSize="13px"; d.style.fontWeight="900";
+    d.textContent = msg;
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(), 1200);
+  }
+
+  async function refreshStatus(){
+    const res = await getJSON(BASE + "/api/list");
+    statusMap = res.data || {};
+    render();
+    toast("Status di-refresh");
+  }
+
+  async function loadAll(){
+    const tokenapi = document.getElementById("tokenapi").value.trim();
+    const idKategori = document.getElementById("idKategori").value.trim();
+    if(!tokenapi || !idKategori) return alert("Token & ID kategori wajib");
+
+    await refreshStatus();
+
+    const cats = await getJSON("https://openapi.bukaolshop.net/v1/app/kategori?token=" + encodeURIComponent(tokenapi));
+    const cat = (cats.data || []).find(x => String(x.id_kategori) === String(idKategori));
+    if(!cat) return alert("Kategori tidak ditemukan");
+
+    const subs = cat.sub_kategori || [];
+    if(subs.length === 0) return alert("Sub kategori kosong");
+
+    products = [];
+    for(const s of subs){
+      const prods = await getJSON("https://openapi.bukaolshop.net/v1/app/produk?token=" + encodeURIComponent(tokenapi) + "&total_data=250&id_kategori=" + s.id_kategori);
+      (prods.data || []).forEach(p => products.push({ nama: p.nama_produk || "", sub: s.nama_kategori || "" }));
+    }
+
+    const seen = new Set();
+    products = products.filter(p => {
+      const k = norm(p.nama);
+      if(!k || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    }).sort((a,b)=>a.nama.localeCompare(b.nama));
+
+    render();
+    toast("Produk berhasil di-load");
+  }
+
+  function render(){
+    const q = norm(document.getElementById("q").value);
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    const filtered = products.filter(p => norm(p.nama).includes(q));
+    if(filtered.length === 0){
+      list.innerHTML = `<div class="text-center text-muted mt-3">Belum ada data. Klik "Load Produk".</div>`;
+      return;
+    }
+
+    filtered.forEach(p => {
+      const key = norm(p.nama);
+      const st = (statusMap[key] || "ON").toUpperCase();
+      const checked = st === "ON" ? "checked" : "";
+
+      const row = document.createElement("div");
+      row.className = "cardx mb-2";
+      row.innerHTML = `
+        <div class="d-flex align-items-center justify-content-between gap-3">
+          <div style="min-width:0;">
+            <p class="nm">${p.nama}</p>
+            <p class="sub">${p.sub} • <span class="pill ${st==='ON'?'on':'off'}">${st}</span></p>
+          </div>
+          <div class="form-check form-switch m-0">
+            <input class="form-check-input" type="checkbox" ${checked}>
+          </div>
+        </div>
+      `;
+
+      const sw = row.querySelector("input");
+      sw.onchange = async () => {
+        const newStatus = sw.checked ? "ON" : "OFF";
+        sw.disabled = true;
+        try{
+          await postJSON(BASE + "/api/set", { nama_produk: p.nama, status: newStatus });
+          statusMap[key] = newStatus;
+          render();
+          toast("Simpan: " + newStatus);
+        }catch(e){
+          alert("Gagal: " + e.message);
+          sw.checked = !sw.checked;
+        }finally{
+          sw.disabled = false;
+        }
+      };
+
+      list.appendChild(row);
+    });
+  }
+
+  async function setAll(status){
+    if(!products.length) return alert("Load produk dulu");
+    if(!confirm("Yakin " + status + " semua produk?")) return;
+
+    const items = products.map(p => ({ nama_produk: p.nama, status }));
+    await postJSON(BASE + "/api/bulk", { items });
+    await refreshStatus();
+    toast(status + " semua");
+  }
+</script>
+</body>
+</html>
