@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import { normName, requireAdminKey, deny } from "./_utils.js";
+import { normName, requireAdminKey, deny } from "../_utils.js";
 const redis = Redis.fromEnv();
 
 export default async function handler(req, res) {
