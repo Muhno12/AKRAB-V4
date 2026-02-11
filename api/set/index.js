@@ -1,8 +1,17 @@
 import { Redis } from "@upstash/redis";
 import { normName, requireAdminKey, deny } from "../_utils.js";
+
 const redis = Redis.fromEnv();
 
 export default async function handler(req, res) {
+  // ✅ CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-admin-key");
+
+  // ✅ Preflight
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   try {
     if (req.method !== "POST") return deny(res, 405, "Method not allowed");
     if (!requireAdminKey(req, res)) return;
@@ -15,8 +24,8 @@ export default async function handler(req, res) {
     if (!["ON", "OFF"].includes(s)) return deny(res, 400, "status harus ON/OFF");
 
     await redis.set("prod:" + name, s);
-    res.status(200).json({ ok: true });
+    return res.status(200).json({ ok: true });
   } catch (e) {
-    res.status(500).json({ ok: false, error: String(e) });
+    return res.status(500).json({ ok: false, error: String(e) });
   }
 }
