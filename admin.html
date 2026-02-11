@@ -19,9 +19,8 @@
       --line:#e5e7eb;
       --ok:#16a34a;
       --bad:#ef4444;
-      --warn:#f59e0b;
       --shadow: 0 10px 28px rgba(15,23,42,.10);
-      --radius: 18px;
+      --radius: 16px;
     }
     body{
       background: var(--bg);
@@ -29,9 +28,9 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
     .wrap{
-      max-width: 820px;
-      margin: 18px auto;
-      padding: 0 14px 40px;
+      max-width: 860px;
+      margin: 16px auto;
+      padding: 0 12px 40px;
     }
 
     /* Header */
@@ -40,7 +39,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       background: linear-gradient(135deg, var(--brand), var(--brand2));
       color:#fff;
       border-radius: var(--radius);
@@ -50,13 +49,13 @@
       font-weight: 900;
       letter-spacing: .2px;
       margin:0;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.2;
     }
     .brand-sub{
       margin:2px 0 0;
       opacity:.92;
-      font-size: 12px;
+      font-size: 11px;
     }
     .pill{
       display:inline-flex;
@@ -64,7 +63,7 @@
       gap:8px;
       background: rgba(255,255,255,.12);
       border: 1px solid rgba(255,255,255,.22);
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 999px;
       font-size: 12px;
       white-space: nowrap;
@@ -77,10 +76,10 @@
       box-shadow: var(--shadow);
       border: 1px solid rgba(229,231,235,.75);
     }
-    .cardx .cardx-body{ padding: 16px; }
+    .cardx .cardx-body{ padding: 14px; }
 
     .section-title{
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       color: var(--muted);
       text-transform: uppercase;
@@ -94,16 +93,797 @@
     .divider{
       height: 1px;
       background: var(--line);
-      margin: 14px 0;
+      margin: 12px 0;
     }
 
     /* Inputs */
     .form-control{
-      border-radius: 14px;
+      border-radius: 12px;
       border:1px solid var(--line);
-      padding: 12px 12px;
+      padding: 10px 12px;
+      box-shadow: none !important;
+      font-size: 13px;
+    }
+
+    /* Buttons */
+    .btnx{
+      border-radius: 12px;
+      padding: 9px 10px;
+      font-weight: 800;
+      border: 1px solid transparent;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+    .btn-brand{ background: var(--brand); color:#fff; }
+    .btn-brand:hover{ filter: brightness(.95); color:#fff; }
+    .btn-ghost{ background:#fff; border:1px solid var(--line); color: var(--text); }
+    .btn-ghost:hover{ background:#f8fafc; }
+    .btn-ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.25); color: var(--ok); }
+    .btn-ok:hover{ background: rgba(22,163,74,.14); color: var(--ok); }
+    .btn-bad{ background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.25); color: var(--bad); }
+    .btn-bad:hover{ background: rgba(239,68,68,.14); color: var(--bad); }
+    .btn-small{ padding: 7px 9px; font-weight: 900; border-radius: 10px; font-size: 12px; }
+    .btn-wide{ min-width: 140px; }
+
+    .hint{
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      border: 1px solid rgba(99,102,241,.18);
+      color:#1e293b;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .chip.ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.22); color: var(--ok); }
+    .chip.bad{ background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.22); color: var(--bad); }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toolbar-left{ flex:1; min-width: 220px; }
+    .toolbar-right{ display:flex; gap:10px; flex-wrap: wrap; align-items:center; justify-content:flex-end; }
+
+    /* ✅ Produk lebih kecil */
+    .prod{
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px;
+      display:flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      background:#fff;
+    }
+    .prod .name{
+      font-weight: 900;
+      font-size: 13px;
+      margin:0;
+      line-height: 1.2;
+    }
+    .prod .meta{
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .status-chip{
+      font-weight: 1000;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid;
+      min-width: 64px;
+      text-align: center;
+    }
+    .st-on{ color: var(--ok); background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.25); }
+    .st-off{ color: var(--bad); background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.25); }
+
+    .actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .loading{
+      display:none;
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+
+    /* Hidden config */
+    .hidden-config{
+      position:absolute !important;
+      left:-99999px !important;
+      top:-99999px !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+      height:0 !important;
+      width:0 !important;
+      overflow:hidden !important;
+    }
+
+    /* Login */
+    .login-wrap{ margin-top: 12px; }
+    .login-hero{
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid rgba(229,231,235,.75);
+      box-shadow: var(--shadow);
+    }
+    .login-hero h2{
+      font-size: 16px;
+      font-weight: 1000;
+      margin: 0 0 6px;
+    }
+    .login-hero p{
+      margin: 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Accordion kategori */
+    .acc-head{
+      border-radius: 14px !important;
+      padding: 10px 12px !important;
+      font-weight: 1000 !important;
+      font-size: 13px !important;
+      color: var(--text) !important;
+      background: #fff !important;
+      border:1px solid var(--line) !important;
       box-shadow: none !important;
     }
+    .accordion-item{
+      border: none !important;
+      background: transparent !important;
+    }
+    .accordion-body{
+      padding: 10px 0 0 !important;
+    }
+    .acc-row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+    .acc-tools{
+      display:flex;
+      gap:8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1 class="brand-title">DASHBOARD AKRAB V4</h1>
+        <p class="brand-sub">Panel ON/OFF Produk︎</p>
+      </div>
+      <div class="pill">
+        <i class="fa-solid fa-shield-halved"></i>
+        <strong>Admin</strong>
+      </div>
+    </div>
+
+    <!-- ✅ CONFIG hidden -->
+    <div class="hidden-config">
+      <input id="tokenApi" value="eyJhcHAiOiIxNjMwMTciLCJhdXRoIjoiMjAyNDA5MTAiLCJzaWduIjoiU2JmTEdJcTFpb0h1OVBTU3hqMzVPdz09In0=" />
+      <input id="kategoriUtama" value="715335" />
+    </div>
+
+    <!-- ✅ LOGIN -->
+    <div id="loginScreen" class="login-wrap">
+      <div class="login-hero mb-3">
+        <h2>CIRCELCUANMV AKRAB V4</h2>
+        <p>Masukkan Admin Key untuk mengakses dashboard.</p>
+      </div>
+
+      <div class="cardx">
+        <div class="cardx-body">
+          <div class="section-title">
+            <span><i class="fa-solid fa-right-to-bracket"></i> Login Admin</span>
+            <span class="chip bad" id="loginStatusChip"><i class="fa-solid fa-lock"></i> Terkunci</span>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-12 col-md-7">
+              <label class="form-label fw-bold" style="font-size:11px;color:var(--muted);">Admin Key</label>
+              <div class="input-group">
+                <input id="adminKey" class="form-control" type="password" placeholder="Masukkan admin key..." autocomplete="current-password">
+                <button id="btnToggleKey" class="btn btnx btn-ghost" type="button" title="Show/Hide">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="hint">Harap Masukan Key Dengan Benar</div>
+            </div>
+
+            <div class="col-12 col-md-5 d-flex flex-column gap-2 justify-content-end">
+              <button id="btnLogin" class="btn btnx btn-brand w-100">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Dashboard
+              </button>
+              <button id="btnClear" class="btn btnx btn-ghost w-100">
+                <i class="fa-solid fa-eraser"></i> Reset
+              </button>
+              <span id="loadingLogin" class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Verifikasi...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ DASHBOARD -->
+    <div id="dashScreen" class="mt-3" style="display:none;">
+      <div class="cardx">
+        <div class="cardx-body">
+          <div class="section-title">
+            <span><i class="fa-solid fa-gauge-high"></i> Dashboard</span>
+            <div class="d-flex align-items-center gap-2">
+              <span class="chip ok"><i class="fa-solid fa-lock-open"></i> Login OK</span>
+              <button id="btnLogout" class="btn btnx btn-ghost btn-small" type="button">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+              </button>
+            </div>
+          </div>
+
+          <div class="toolbar mb-2">
+            <div class="toolbar-left">
+              <input id="search" class="form-control" placeholder="Cari nama produk... (filter semua kategori)">
+              <div class="hint" id="statText">Kategori: 0 • Total Produk: 0 • Ditampilkan: 0</div>
+            </div>
+            <div class="toolbar-right">
+              <span class="chip" id="subInfo"><i class="fa-solid fa-layer-group"></i> sub_kategori: -</span>
+              <span id="loadingDash" class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 flex-wrap">
+            <button id="btnLoad" class="btn btnx btn-brand btn-wide">
+              <i class="fa-solid fa-download"></i> Load Produk
+            </button>
+            <button id="btnRefresh" class="btn btnx btn-ghost btn-wide">
+              <i class="fa-solid fa-rotate"></i> Refresh Status
+            </button>
+            <button id="btnOffAll" class="btn btnx btn-bad btn-wide">
+              <i class="fa-solid fa-ban"></i> OFF Semua (Filter)
+            </button>
+            <button id="btnOnAll" class="btn btnx btn-ok btn-wide">
+              <i class="fa-solid fa-power-off"></i> ON Semua (Filter)
+            </button>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ✅ Accordion per sub_kategori -->
+          <div class="accordion" id="accordionCats"></div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+/* =========================
+   DASHBOARD + LOGIN
+   ========================= */
+const VERCEL_BASE = location.origin;
+
+const el = (id)=>document.getElementById(id);
+const tokenApiEl = el("tokenApi");
+const kategoriUtamaEl = el("kategoriUtama");
+
+const loginScreen = el("loginScreen");
+const dashScreen = el("dashScreen");
+
+const adminKeyEl = el("adminKey");
+const btnToggleKey = el("btnToggleKey");
+const btnLogin = el("btnLogin");
+const btnClear = el("btnClear");
+const btnLogout = el("btnLogout");
+const loginStatusChip = el("loginStatusChip");
+const loadingLogin = el("loadingLogin");
+
+const btnLoad = el("btnLoad");
+const btnRefresh = el("btnRefresh");
+const btnOffAll = el("btnOffAll");
+const btnOnAll = el("btnOnAll");
+const searchEl = el("search");
+const statTextEl = el("statText");
+const subInfoEl = el("subInfo");
+const loadingDash = el("loadingDash");
+const accRoot = el("accordionCats");
+
+let GROUPS = {};     // { "Akrab V1": [products], "Akrab V2":[products] }
+let GROUP_ORDER = []; // array of group names in order
+let STATUS_MAP = {};
+let SUB_COUNT = 0;
+
+const SESSION_KEY = "akrab_admin_key";
+
+function normNameClient(s){
+  return (s||"").toString().toLowerCase().replace(/\s+/g," ").trim();
+}
+function escapeHtml(str){
+  return (str || "").toString()
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function setLoadingLogin(on){
+  loadingLogin.style.display = on ? "inline" : "none";
+  btnLogin.disabled = on;
+  btnClear.disabled = on;
+}
+function setLoadingDash(on){
+  loadingDash.style.display = on ? "inline" : "none";
+  btnLoad.disabled = on;
+  btnRefresh.disabled = on;
+  btnOffAll.disabled = on;
+  btnOnAll.disabled = on;
+}
+
+/* ✅ Verifikasi Admin Key */
+async function verifyAdminKey(key){
+  const r = await fetch(VERCEL_BASE + "/api/set", {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      "x-admin-key": key
+    },
+    body: JSON.stringify({})
+  });
+  const j = await r.json().catch(()=> ({}));
+
+  if (r.status === 401) return { ok:false, msg: j.msg || "Admin key salah" };
+  if (r.status === 500) return { ok:false, msg: j.msg || j.error || "Server error" };
+
+  return { ok:true };
+}
+
+function showDashboard(){
+  loginScreen.style.display = "none";
+  dashScreen.style.display = "block";
+}
+function showLogin(){
+  dashScreen.style.display = "none";
+  loginScreen.style.display = "block";
+}
+function setLockedUI(locked){
+  if(locked){
+    loginStatusChip.className = "chip bad";
+    loginStatusChip.innerHTML = '<i class="fa-solid fa-lock"></i> Terkunci';
+  }else{
+    loginStatusChip.className = "chip ok";
+    loginStatusChip.innerHTML = '<i class="fa-solid fa-lock-open"></i> Siap Masuk';
+  }
+}
+
+/* ===== API ===== */
+async function apiListStatus(){
+  const r = await fetch(VERCEL_BASE + "/api/list", { cache:"no-store" });
+  const j = await r.json();
+  if(!r.ok || !j.ok) throw new Error(j.error || j.msg || "Gagal /api/list");
+  return j.data || {};
+}
+async function apiSetStatus(nama_produk, status){
+  const key = (adminKeyEl.value || "").trim();
+  if(!key) throw new Error("Admin key kosong");
+  const r = await fetch(VERCEL_BASE + "/api/set", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "x-admin-key": key
+    },
+    body: JSON.stringify({ nama_produk, status })
+  });
+  const j = await r.json();
+  if(!r.ok || !j.ok) throw new Error(j.error || j.msg || "Gagal /api/set");
+  return true;
+}
+
+/* ===== Load Produk & group by sub_kategori ===== */
+async function loadAllProductsGrouped(){
+  const token = (tokenApiEl.value || "").trim();
+  const idKategoriUtama = (kategoriUtamaEl.value || "").trim();
+
+  if(!token) throw new Error("Token API kosong (hidden)");
+  if(!idKategoriUtama) throw new Error("ID kategori kosong (hidden)");
+
+  const catRes = await fetch("https://openapi.bukaolshop.net/v1/app/kategori?token=" + encodeURIComponent(token), { cache:"no-store" });
+  const catJson = await catRes.json();
+  if(!catRes.ok || !catJson || !catJson.data) throw new Error("Gagal ambil kategori");
+
+  const main = (catJson.data || []).find(x => String(x.id_kategori) === String(idKategoriUtama));
+  if(!main) throw new Error("Kategori utama tidak ditemukan. Cek ID kategori.");
+
+  const subs = (main.sub_kategori || []);
+  SUB_COUNT = subs.length;
+  subInfoEl.innerHTML = `<i class="fa-solid fa-layer-group"></i> sub_kategori: ${SUB_COUNT}`;
+
+  const groups = {};
+  const order = [];
+
+  for(const s of subs){
+    const groupName = (s.nama_kategori || "Kategori").trim() || "Kategori";
+    if(!groups[groupName]) { groups[groupName] = []; order.push(groupName); }
+
+    const url = "https://openapi.bukaolshop.net/v1/app/produk?token=" + encodeURIComponent(token)
+      + "&total_data=200&id_kategori=" + encodeURIComponent(s.id_kategori);
+
+    const pr = await fetch(url, { cache:"no-store" });
+    const pj = await pr.json();
+
+    if(pr.ok && pj && Array.isArray(pj.data)){
+      const seen = new Set();
+      for(const p of pj.data){
+        const key = normNameClient(p.nama_produk || "");
+        if(!key) continue;
+        if(seen.has(key)) continue;
+        seen.add(key);
+        // simpan label group
+        groups[groupName].push({ ...p, __group: groupName });
+      }
+    }
+  }
+
+  // sort produk per grup
+  for(const g of order){
+    groups[g].sort((a,b)=> (a.nama_produk||"").localeCompare(b.nama_produk||""));
+  }
+
+  GROUPS = groups;
+  GROUP_ORDER = order;
+}
+
+/* ===== Render per kategori ===== */
+function getAllProductsFlat(){
+  const out = [];
+  for(const g of GROUP_ORDER){
+    out.push(...(GROUPS[g]||[]));
+  }
+  return out;
+}
+
+function render(){
+  const q = (searchEl.value || "").toLowerCase().trim();
+
+  // statistik
+  const all = getAllProductsFlat();
+  const totalAll = all.length;
+  const totalGroups = GROUP_ORDER.length;
+  const shown = q
+    ? all.filter(p => (p.nama_produk||"").toLowerCase().includes(q)).length
+    : totalAll;
+
+  statTextEl.textContent = `Kategori: ${totalGroups} • Total Produk: ${totalAll} • Ditampilkan: ${shown}` + (SUB_COUNT ? ` (sub_kategori: ${SUB_COUNT})` : "");
+
+  accRoot.innerHTML = "";
+
+  GROUP_ORDER.forEach((groupName, idx) => {
+    const items = (GROUPS[groupName] || []);
+    const filtered = q
+      ? items.filter(p => (p.nama_produk||"").toLowerCase().includes(q))
+      : items;
+
+    const gid = "cat_" + idx;
+    const collapseId = "collapse_" + idx;
+
+    const itemCount = filtered.length;
+    const totalCount = items.length;
+
+    // header
+    const accItem = document.createElement("div");
+    accItem.className = "accordion-item mb-2";
+
+    accItem.innerHTML = `
+      <h2 class="accordion-header" id="${gid}">
+        <button class="accordion-button collapsed acc-head" type="button"
+          data-bs-toggle="collapse" data-bs-target="#${collapseId}"
+          aria-expanded="false" aria-controls="${collapseId}">
+          <div class="w-100 acc-row">
+            <div style="min-width:0;">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="font-weight:1000;">${escapeHtml(groupName)}</span>
+                <span class="chip" style="font-size:11px;padding:5px 10px;">
+                  <i class="fa-solid fa-list"></i> ${itemCount}/${totalCount}
+                </span>
+              </div>
+            </div>
+            <div class="acc-tools" onclick="event.stopPropagation();">
+              <button class="btn btnx btn-bad btn-small" data-g="${idx}" data-act="offg">
+                <i class="fa-solid fa-ban"></i> OFF
+              </button>
+              <button class="btn btnx btn-ok btn-small" data-g="${idx}" data-act="ong">
+                <i class="fa-solid fa-power-off"></i> ON
+              </button>
+            </div>
+          </div>
+        </button>
+      </h2>
+
+      <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${gid}" data-bs-parent="#accordionCats">
+        <div class="accordion-body">
+          <div class="d-flex flex-column gap-2" id="list_${idx}"></div>
+        </div>
+      </div>
+    `;
+
+    accRoot.appendChild(accItem);
+
+    // render produk list dalam collapse
+    const list = accItem.querySelector("#list_" + idx);
+    filtered.forEach(p => {
+      const name = p.nama_produk || "";
+      const key = normNameClient(name);
+      const st = (STATUS_MAP[key] || "ON").toUpperCase();
+
+      const row = document.createElement("div");
+      row.className = "prod";
+      row.innerHTML = `
+        <div style="min-width:0;flex:1;">
+          <p class="name">${escapeHtml(name)}</p>
+          <div class="meta">${escapeHtml(p.nama_kategori || "")}</div>
+        </div>
+        <div class="actions">
+          <span class="status-chip ${st === "ON" ? "st-on" : "st-off"}">${st}</span>
+          <button class="btn btnx btn-bad btn-small" data-act="off"><i class="fa-solid fa-ban"></i></button>
+          <button class="btn btnx btn-ok btn-small" data-act="on"><i class="fa-solid fa-power-off"></i></button>
+        </div>
+      `;
+
+      const btnOff = row.querySelector('[data-act="off"]');
+      const btnOn  = row.querySelector('[data-act="on"]');
+
+      btnOff.addEventListener("click", async ()=>{
+        try{
+          setLoadingDash(true);
+          await apiSetStatus(name, "OFF");
+          STATUS_MAP[key] = "OFF";
+          render();
+          // auto-open kategori biar user lihat perubahan
+          bootstrapCollapseOpen(collapseId);
+        }catch(e){ alert(e.message || e); }
+        finally{ setLoadingDash(false); }
+      });
+
+      btnOn.addEventListener("click", async ()=>{
+        try{
+          setLoadingDash(true);
+          await apiSetStatus(name, "ON");
+          STATUS_MAP[key] = "ON";
+          render();
+          bootstrapCollapseOpen(collapseId);
+        }catch(e){ alert(e.message || e); }
+        finally{ setLoadingDash(false); }
+      });
+
+      list.appendChild(row);
+    });
+
+    // tombol ON/OFF per kategori
+    const btnOffG = accItem.querySelector('[data-act="offg"]');
+    const btnOnG  = accItem.querySelector('[data-act="ong"]');
+
+    btnOffG.addEventListener("click", async ()=>{
+      if(!confirm(`OFF semua produk di "${groupName}" (yang sedang tampil/filter)?`)) return;
+      try{
+        setLoadingDash(true);
+        for(const p of filtered){
+          await apiSetStatus(p.nama_produk, "OFF");
+          STATUS_MAP[normNameClient(p.nama_produk)] = "OFF";
+        }
+        render();
+        bootstrapCollapseOpen(collapseId);
+      }catch(e){ alert(e.message || e); }
+      finally{ setLoadingDash(false); }
+    });
+
+    btnOnG.addEventListener("click", async ()=>{
+      if(!confirm(`ON semua produk di "${groupName}" (yang sedang tampil/filter)?`)) return;
+      try{
+        setLoadingDash(true);
+        for(const p of filtered){
+          await apiSetStatus(p.nama_produk, "ON");
+          STATUS_MAP[normNameClient(p.nama_produk)] = "ON";
+        }
+        render();
+        bootstrapCollapseOpen(collapseId);
+      }catch(e){ alert(e.message || e); }
+      finally{ setLoadingDash(false); }
+    });
+  });
+}
+
+function bootstrapCollapseOpen(collapseId){
+  const elc = document.getElementById(collapseId);
+  if(!elc) return;
+  const c = bootstrap.Collapse.getOrCreateInstance(elc, { toggle:false });
+  c.show();
+}
+
+/* ===== Events ===== */
+btnToggleKey.addEventListener("click", ()=>{
+  const isPass = adminKeyEl.type === "password";
+  adminKeyEl.type = isPass ? "text" : "password";
+  btnToggleKey.innerHTML = isPass
+    ? '<i class="fa-solid fa-eye-slash"></i>'
+    : '<i class="fa-solid fa-eye"></i>';
+});
+
+btnLogin.addEventListener("click", async ()=>{
+  const key = (adminKeyEl.value || "").trim();
+  if(!key) return alert("Admin key wajib diisi");
+
+  try{
+    setLoadingLogin(true);
+    const v = await verifyAdminKey(key);
+    if(!v.ok){
+      setLockedUI(true);
+      return alert(v.msg || "Admin key salah");
+    }
+    sessionStorage.setItem(SESSION_KEY, key);
+    setLockedUI(false);
+    showDashboard();
+  }catch(e){
+    setLockedUI(true);
+    alert(e.message || e);
+  }finally{
+    setLoadingLogin(false);
+  }
+});
+
+btnClear.addEventListener("click", ()=>{
+  adminKeyEl.value = "";
+  sessionStorage.removeItem(SESSION_KEY);
+  setLockedUI(true);
+});
+
+btnLogout.addEventListener("click", ()=>{
+  if(!confirm("Logout dari dashboard?")) return;
+  sessionStorage.removeItem(SESSION_KEY);
+  GROUPS = {};
+  GROUP_ORDER = [];
+  STATUS_MAP = {};
+  SUB_COUNT = 0;
+  accRoot.innerHTML = "";
+  searchEl.value = "";
+  showLogin();
+  setLockedUI(true);
+});
+
+btnLoad.addEventListener("click", async ()=>{
+  try{
+    setLoadingDash(true);
+    await loadAllProductsGrouped();
+    STATUS_MAP = await apiListStatus();
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
+
+btnRefresh.addEventListener("click", async ()=>{
+  try{
+    setLoadingDash(true);
+    STATUS_MAP = await apiListStatus();
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
+
+btnOffAll.addEventListener("click", async ()=>{
+  if(!confirm("Yakin OFF semua produk yang tampil (sesuai filter)?")) return;
+  try{
+    setLoadingDash(true);
+    const q = (searchEl.value || "").toLowerCase().trim();
+    for(const g of GROUP_ORDER){
+      const items = GROUPS[g] || [];
+      const filtered = q ? items.filter(p => (p.nama_produk||"").toLowerCase().includes(q)) : items;
+      for(const p of filtered){
+        await apiSetStatus(p.nama_produk, "OFF");
+        STATUS_MAP[normNameClient(p.nama_produk)] = "OFF";
+      }
+    }
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
+
+btnOnAll.addEventListener("click", async ()=>{
+  if(!confirm("Yakin ON semua produk yang tampil (sesuai filter)?")) return;
+  try{
+    setLoadingDash(true);
+    const q = (searchEl.value || "").toLowerCase().trim();
+    for(const g of GROUP_ORDER){
+      const items = GROUPS[g] || [];
+      const filtered = q ? items.filter(p => (p.nama_produk||"").toLowerCase().includes(q)) : items;
+      for(const p of filtered){
+        await apiSetStatus(p.nama_produk, "ON");
+        STATUS_MAP[normNameClient(p.nama_produk)] = "ON";
+      }
+    }
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
+
+searchEl.addEventListener("input", render);
+
+/* ===== Auto-login ===== */
+(async function init(){
+  const saved = sessionStorage.getItem(SESSION_KEY);
+  if(saved){
+    adminKeyEl.value = saved;
+    try{
+      setLoadingLogin(true);
+      const v = await verifyAdminKey(saved);
+      if(v.ok){
+        setLockedUI(false);
+        showDashboard();
+        return;
+      }
+    }catch(e){}
+    finally{
+      setLoadingLogin(false);
+    }
+  }
+  setLockedUI(true);
+  showLogin();
+})();
+
+function setLockedUI(locked){
+  if(locked){
+    loginStatusChip.className = "chip bad";
+    loginStatusChip.innerHTML = '<i class="fa-solid fa-lock"></i> Terkunci';
+  }else{
+    loginStatusChip.className = "chip ok";
+    loginStatusChip.innerHTML = '<i class="fa-solid fa-lock-open"></i> Siap Masuk';
+  }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>    }
     .input-group .btn{
       border-radius: 14px;
     }
