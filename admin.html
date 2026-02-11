@@ -1,291 +1,751 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Admin ON/OFF Produk</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DASHBOARD AKRAB V4</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
   <style>
-    body{ background:#f7f7f7; }
-    .cardx{ background:#fff;border-radius:14px;border:1px solid #eee;padding:14px; }
-    .nm{ font-weight:900;font-size:13px;margin:0; }
-    .sub{ font-size:12px;color:#666;margin:0; }
-    .pill{ font-size:11px;font-weight:900;border-radius:999px;padding:4px 10px;display:inline-block; }
-    .on{ background:#e7ffe8;color:#0a7a12;border:1px solid #c9f5cc; }
-    .off{ background:#ffe9e9;color:#a50f0f;border:1px solid #ffd0d0; }
-    .rowx{ display:flex; gap:10px; align-items:center; justify-content:space-between; }
-    .btnx{ min-width:78px; }
-    .muted{ color:#777; font-size:12px; }
+    :root{
+      --brand:#1565c0;
+      --brand2:#0b3f86;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --ok:#16a34a;
+      --bad:#ef4444;
+      --warn:#f59e0b;
+      --shadow: 0 10px 28px rgba(15,23,42,.10);
+      --radius: 18px;
+    }
+    body{
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .wrap{
+      max-width: 820px;
+      margin: 18px auto;
+      padding: 0 14px 40px;
+    }
+
+    /* Header */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      color:#fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .brand-title{
+      font-weight: 900;
+      letter-spacing: .2px;
+      margin:0;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .brand-sub{
+      margin:2px 0 0;
+      opacity:.92;
+      font-size: 12px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    /* Card */
+    .cardx{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(229,231,235,.75);
+    }
+    .cardx .cardx-body{ padding: 16px; }
+
+    .section-title{
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:10px;
+    }
+    .divider{
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0;
+    }
+
+    /* Inputs */
+    .form-control{
+      border-radius: 14px;
+      border:1px solid var(--line);
+      padding: 12px 12px;
+      box-shadow: none !important;
+    }
+    .input-group .btn{
+      border-radius: 14px;
+    }
+
+    /* Buttons (lebih elegan & rapi) */
+    .btnx{
+      border-radius: 14px;
+      padding: 11px 12px;
+      font-weight: 800;
+      border: 1px solid transparent;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .btn-brand{ background: var(--brand); color:#fff; }
+    .btn-brand:hover{ filter: brightness(.95); color:#fff; }
+    .btn-ghost{ background:#fff; border:1px solid var(--line); color: var(--text); }
+    .btn-ghost:hover{ background:#f8fafc; }
+    .btn-ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.25); color: var(--ok); }
+    .btn-ok:hover{ background: rgba(22,163,74,.14); color: var(--ok); }
+    .btn-bad{ background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.25); color: var(--bad); }
+    .btn-bad:hover{ background: rgba(239,68,68,.14); color: var(--bad); }
+
+    .btn-wide{ min-width: 160px; }
+    .btn-small{ padding: 10px 10px; font-weight: 900; border-radius: 12px; }
+
+    .hint{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    /* Chips */
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      border: 1px solid rgba(99,102,241,.18);
+      color:#1e293b;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .chip.ok{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.22); color: var(--ok); }
+    .chip.bad{ background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.22); color: var(--bad); }
+
+    /* Layout blocks */
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 720px){
+      .grid-2{ grid-template-columns: 1.1fr .9fr; }
+    }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toolbar-left{ flex:1; min-width: 220px; }
+    .toolbar-right{ display:flex; gap:10px; flex-wrap: wrap; align-items:center; justify-content:flex-end; }
+
+    /* Product list */
+    .product-list{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .prod{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      display:flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background:#fff;
+    }
+    .prod .name{
+      font-weight: 900;
+      font-size: 14px;
+      margin:0;
+      line-height: 1.25;
+    }
+    .prod .meta{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .status-chip{
+      font-weight: 1000;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid;
+      min-width: 74px;
+      text-align: center;
+    }
+    .st-on{ color: var(--ok); background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.25); }
+    .st-off{ color: var(--bad); background: rgba(239,68,68,.08); border-color: rgba(239,68,68,.25); }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* Loading */
+    .loading{
+      display:none;
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+
+    /* Hidden config (Token & kategori disembunyikan) */
+    .hidden-config{
+      position:absolute !important;
+      left:-99999px !important;
+      top:-99999px !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+      height:0 !important;
+      width:0 !important;
+      overflow:hidden !important;
+    }
+
+    /* Login page feel */
+    .login-wrap{
+      margin-top: 14px;
+    }
+    .login-hero{
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid rgba(229,231,235,.75);
+      box-shadow: var(--shadow);
+    }
+    .login-hero h2{
+      font-size: 18px;
+      font-weight: 1000;
+      margin: 0 0 6px;
+    }
+    .login-hero p{
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
   </style>
 </head>
-<body class="p-3">
-  <div class="container" style="max-width:760px;">
-    <div class="cardx mb-3">
-      <h5 class="mb-1" style="font-weight:900;">Admin ON/OFF Produk</h5>
-      <div class="text-muted" style="font-size:13px;">Akses: <b>/admin.html</b> (host Vercel). Status disimpan di Upstash.</div>
-      <hr>
-      <div class="row g-2">
-        <div class="col-12">
-          <label class="form-label">Token API BukaOlshop</label>
-          <input id="tokenapi" class="form-control" value="eyJhcHAiOiIxNjMwMTciLCJhdXRoIjoiMjAyNDA5MTAiLCJzaWduIjoiU2JmTEdJcTFpb0h1OVBTU3hqMzVPdz09In0=">
-        </div>
-        <div class="col-12">
-          <label class="form-label">ID Kategori Utama Akrab (contoh 715335)</label>
-          <input id="idKategori" class="form-control" value="715335">
-          <div class="muted mt-1">Catatan: produk biasanya ada di <b>sub_kategori</b>. Script ini otomatis ambil semua sub_kategori (misal 2).</div>
-        </div>
-        <div class="col-12">
-          <label class="form-label">Admin Key</label>
-          <input id="adminKey" class="form-control" placeholder="Masukkan ADMIN_KEY (sama seperti env di Vercel)">
-        </div>
-        <div class="col-12 d-flex gap-2 mt-1">
-          <button class="btn btn-primary w-100" onclick="loadAll()">Load Produk</button>
-          <button class="btn btn-outline-secondary w-100" onclick="refreshStatus()">Refresh Status</button>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1 class="brand-title">DASHBOARD AKRAB V4</h1>
+        <p class="brand-sub">Panel ON/OFF Produk • Status disimpan di Upstash</p>
+      </div>
+      <div class="pill">
+        <i class="fa-solid fa-shield-halved"></i>
+        <strong>Admin</strong>
+      </div>
+    </div>
+
+    <!-- ✅ CONFIG (tetap dipakai, tapi disembunyikan) -->
+    <div class="hidden-config">
+      <input id="tokenApi" value="eyJhcHAiOiIxNjMwMTciLCJhdXRoIjoiMjAyNDA5MTAiLCJzaWduIjoiU2JmTEdJcTFpb0h1OVBTU3hqMzVPdz09In0=" />
+      <input id="kategoriUtama" value="715335" />
+    </div>
+
+    <!-- ✅ LOGIN SCREEN -->
+    <div id="loginScreen" class="login-wrap">
+      <div class="login-hero mb-3">
+        <h2>CIRCELCUANMV AKRAB V4</h2>
+        <p>Masukkan Admin Key untuk mengakses dashboard.</p>
+      </div>
+
+      <div class="cardx">
+        <div class="cardx-body">
+          <div class="section-title">
+            <span><i class="fa-solid fa-right-to-bracket"></i> Login Admin</span>
+            <span class="chip bad" id="loginStatusChip"><i class="fa-solid fa-lock"></i> Terkunci</span>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <label class="form-label fw-bold" style="font-size:12px;color:var(--muted);">Admin Key</label>
+              <div class="input-group">
+                <input id="adminKey" class="form-control" type="password" placeholder="Masukkan admin key..." autocomplete="current-password">
+                <button id="btnToggleKey" class="btn btnx btn-ghost" type="button" title="Show/Hide">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="hint">Dashboard akan terkunci jika admin key salah / belum login.</div>
+            </div>
+
+            <div class="d-flex flex-column justify-content-end gap-2">
+              <button id="btnLogin" class="btn btnx btn-brand w-100">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk Dashboard
+              </button>
+              <button id="btnClear" class="btn btnx btn-ghost w-100">
+                <i class="fa-solid fa-eraser"></i> Reset
+              </button>
+              <span id="loadingLogin" class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Verifikasi...</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="hint">
+            <b>Catatan:</b> Token API & ID kategori disembunyikan agar rapi. Tidak mengubah fungsi utama.
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="cardx mb-2">
-      <input id="q" class="form-control" placeholder="Cari nama produk..." oninput="render()">
-      <div class="muted mt-2">
-        Total Produk: <b id="totalAll">0</b> • Ditampilkan: <b id="totalShown">0</b>
-        <span id="subInfo" class="ms-2"></span>
+    <!-- ✅ DASHBOARD SCREEN -->
+    <div id="dashScreen" class="mt-3" style="display:none;">
+      <div class="cardx">
+        <div class="cardx-body">
+          <div class="section-title">
+            <span><i class="fa-solid fa-gauge-high"></i> Dashboard</span>
+            <div class="d-flex align-items-center gap-2">
+              <span class="chip ok"><i class="fa-solid fa-lock-open"></i> Login OK</span>
+              <button id="btnLogout" class="btn btnx btn-ghost btn-small" type="button">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+              </button>
+            </div>
+          </div>
+
+          <div class="toolbar mb-2">
+            <div class="toolbar-left">
+              <input id="search" class="form-control" placeholder="Cari nama produk...">
+              <div class="hint" id="statText">Total Produk: 0 • Ditampilkan: 0</div>
+            </div>
+            <div class="toolbar-right">
+              <span class="chip" id="subInfo"><i class="fa-solid fa-layer-group"></i> sub_kategori: -</span>
+              <span id="loadingDash" class="loading"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 flex-wrap">
+            <button id="btnLoad" class="btn btnx btn-brand btn-wide">
+              <i class="fa-solid fa-download"></i> Load Produk
+            </button>
+            <button id="btnRefresh" class="btn btnx btn-ghost btn-wide">
+              <i class="fa-solid fa-rotate"></i> Refresh Status
+            </button>
+            <button id="btnOffAll" class="btn btnx btn-bad btn-wide">
+              <i class="fa-solid fa-ban"></i> OFF Semua
+            </button>
+            <button id="btnOnAll" class="btn btnx btn-ok btn-wide">
+              <i class="fa-solid fa-power-off"></i> ON Semua
+            </button>
+          </div>
+
+          <div id="list" class="product-list"></div>
+        </div>
       </div>
     </div>
 
-    <div class="d-flex gap-2 mb-2">
-      <button class="btn btn-sm btn-outline-danger w-100" onclick="setAll('OFF')">OFF Semua</button>
-      <button class="btn btn-sm btn-outline-success w-100" onclick="setAll('ON')">ON Semua</button>
-    </div>
-
-    <div id="list" class="d-grid gap-2"></div>
   </div>
 
 <script>
-  const BASE = ""; // karena api & halaman sama-sama di Vercel
+/* =========================
+   DASHBOARD + LOGIN
+   ========================= */
+const VERCEL_BASE = location.origin;
 
-  let products = [];     // [{ nama_produk, ... }]
-  let statusMap = {};    // { "nama produk normalized": "ON"/"OFF" }
-  let subcats = [];      // sub_kategori yang dipakai
+const el = (id)=>document.getElementById(id);
+const tokenApiEl = el("tokenApi");
+const kategoriUtamaEl = el("kategoriUtama");
 
-  function norm(s){ return (s||"").toString().toLowerCase().replace(/\s+/g," ").trim(); }
+const loginScreen = el("loginScreen");
+const dashScreen = el("dashScreen");
 
-  async function safeJSON(resp){
-    const ct = resp.headers.get("content-type") || "";
-    const text = await resp.text();
-    if(!ct.includes("application/json")){
-      // biar errornya kebaca kalau server balikin HTML
-      throw new Error("Respon bukan JSON: " + text.slice(0,120));
-    }
-    try { return JSON.parse(text); }
-    catch(e){ throw new Error("JSON tidak valid: " + text.slice(0,120)); }
+const adminKeyEl = el("adminKey");
+const btnToggleKey = el("btnToggleKey");
+const btnLogin = el("btnLogin");
+const btnClear = el("btnClear");
+const btnLogout = el("btnLogout");
+const loginStatusChip = el("loginStatusChip");
+const loadingLogin = el("loadingLogin");
+
+const btnLoad = el("btnLoad");
+const btnRefresh = el("btnRefresh");
+const btnOffAll = el("btnOffAll");
+const btnOnAll = el("btnOnAll");
+const listEl = el("list");
+const searchEl = el("search");
+const statTextEl = el("statText");
+const subInfoEl = el("subInfo");
+const loadingDash = el("loadingDash");
+
+let ALL_PRODUCTS = [];
+let STATUS_MAP = {};
+let SUB_COUNT = 0;
+
+const SESSION_KEY = "akrab_admin_key";
+
+function normNameClient(s){
+  return (s||"").toString().toLowerCase().replace(/\s+/g," ").trim();
+}
+function escapeHtml(str){
+  return (str || "").toString()
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function setLoadingLogin(on){
+  loadingLogin.style.display = on ? "inline" : "none";
+  btnLogin.disabled = on;
+  btnClear.disabled = on;
+}
+function setLoadingDash(on){
+  loadingDash.style.display = on ? "inline" : "none";
+  btnLoad.disabled = on;
+  btnRefresh.disabled = on;
+  btnOffAll.disabled = on;
+  btnOnAll.disabled = on;
+}
+
+/* ✅ VERIFIKASI ADMIN KEY
+   Trick: POST /api/set dengan body kosong {}
+   - kalau key salah -> 401 Unauthorized
+   - kalau key benar -> 400 nama_produk wajib (berarti lolos admin)
+   Tidak mengubah data apapun.
+*/
+async function verifyAdminKey(key){
+  const r = await fetch(VERCEL_BASE + "/api/set", {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      "x-admin-key": key
+    },
+    body: JSON.stringify({})
+  });
+  const j = await r.json().catch(()=> ({}));
+
+  if (r.status === 401) return { ok:false, msg: j.msg || "Admin key salah" };
+  if (r.status === 500) return { ok:false, msg: j.msg || j.error || "Server error" };
+
+  // kalau sampai sini, artinya admin key benar (biasanya 400 nama_produk wajib)
+  return { ok:true };
+}
+
+function showDashboard(){
+  loginScreen.style.display = "none";
+  dashScreen.style.display = "block";
+}
+function showLogin(){
+  dashScreen.style.display = "none";
+  loginScreen.style.display = "block";
+}
+
+function setLockedUI(locked){
+  if(locked){
+    loginStatusChip.className = "chip bad";
+    loginStatusChip.innerHTML = '<i class="fa-solid fa-lock"></i> Terkunci';
+  }else{
+    loginStatusChip.className = "chip ok";
+    loginStatusChip.innerHTML = '<i class="fa-solid fa-lock-open"></i> Siap Masuk';
   }
+}
 
-  async function getJSON(url){
-    const r = await fetch(url);
-    const j = await safeJSON(r);
-    if(!r.ok || j?.ok === false) throw new Error(j?.msg || j?.error || "Error");
-    return j;
-  }
+/* ===== API ===== */
+async function apiListStatus(){
+  const r = await fetch(VERCEL_BASE + "/api/list", { cache:"no-store" });
+  const j = await r.json();
+  if(!r.ok || !j.ok) throw new Error(j.error || j.msg || "Gagal /api/list");
+  return j.data || {};
+}
+async function apiSetStatus(nama_produk, status){
+  const key = (adminKeyEl.value || "").trim();
+  if(!key) throw new Error("Admin key kosong");
+  const r = await fetch(VERCEL_BASE + "/api/set", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "x-admin-key": key
+    },
+    body: JSON.stringify({ nama_produk, status })
+  });
+  const j = await r.json();
+  if(!r.ok || !j.ok) throw new Error(j.error || j.msg || "Gagal /api/set");
+  return true;
+}
 
-  async function postJSON(url, body){
-    const key = document.getElementById("adminKey").value.trim();
-    if(!key) throw new Error("Admin Key wajib diisi");
+/* ===== Load Produk dari BukaOlshop ===== */
+async function loadAllProducts(){
+  const token = (tokenApiEl.value || "").trim();
+  const idKategoriUtama = (kategoriUtamaEl.value || "").trim();
 
-    const r = await fetch(url, {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "x-admin-key": key
-      },
-      body: JSON.stringify(body)
-    });
-    const j = await safeJSON(r);
-    if(!r.ok || j?.ok === false) throw new Error(j?.msg || j?.error || "Error");
-    return j;
-  }
+  if(!token) throw new Error("Token API kosong (hidden)");
+  if(!idKategoriUtama) throw new Error("ID kategori kosong (hidden)");
 
-  function toast(msg, type="info"){
-    const d = document.createElement("div");
-    d.className = "alert alert-" + (type==="ok" ? "success" : type==="err" ? "danger" : "info") + " p-2";
-    d.style.position="fixed"; d.style.right="12px"; d.style.top="12px"; d.style.zIndex=9999;
-    d.style.fontSize="13px"; d.style.fontWeight="900";
-    d.textContent = msg;
-    document.body.appendChild(d);
-    setTimeout(()=>d.remove(), 1400);
-  }
+  const catRes = await fetch("https://openapi.bukaolshop.net/v1/app/kategori?token=" + encodeURIComponent(token), { cache:"no-store" });
+  const catJson = await catRes.json();
+  if(!catRes.ok || !catJson || !catJson.data) throw new Error("Gagal ambil kategori");
 
-  async function refreshStatus(){
-    const res = await getJSON(BASE + "/api/list");
-    statusMap = res.data || {};
-    render();
-    toast("Status di-refresh", "ok");
-  }
+  const main = (catJson.data || []).find(x => String(x.id_kategori) === String(idKategoriUtama));
+  if(!main) throw new Error("Kategori utama tidak ditemukan. Cek ID kategori.");
 
-  // Ambil subkategori dari kategori utama
-  async function fetchSubcats(token, mainId){
-    const cat = await getJSON("https://openapi.bukaolshop.net/v1/app/kategori?token=" + encodeURIComponent(token));
-    const categories =
-      (Array.isArray(cat.data) ? cat.data :
-      (cat.data && Array.isArray(cat.data.data) ? cat.data.data : []));
+  const subs = (main.sub_kategori || []);
+  SUB_COUNT = subs.length;
+  subInfoEl.innerHTML = `<i class="fa-solid fa-layer-group"></i> sub_kategori: ${SUB_COUNT}`;
 
-    const main = categories.find(x => String(x.id_kategori) === String(mainId));
-    const subs = (main && Array.isArray(main.sub_kategori)) ? main.sub_kategori : [];
-    return subs;
-  }
-
-  async function fetchProductsByCategory(token, idKat){
+  let products = [];
+  for(const s of subs){
     const url = "https://openapi.bukaolshop.net/v1/app/produk?token=" + encodeURIComponent(token)
-      + "&id_kategori=" + encodeURIComponent(idKat)
-      + "&total_data=200";
-    const res = await getJSON(url);
+      + "&total_data=200&id_kategori=" + encodeURIComponent(s.id_kategori);
 
-    const arr =
-      (Array.isArray(res.data) ? res.data :
-      (res.data && Array.isArray(res.data.data) ? res.data.data : []));
-
-    return arr;
-  }
-
-  async function loadAll(){
-    try{
-      const token = document.getElementById("tokenapi").value.trim();
-      const mainId = document.getElementById("idKategori").value.trim();
-      if(!token) return toast("Token API wajib diisi", "err");
-      if(!mainId) return toast("ID Kategori wajib diisi", "err");
-
-      // 1) Ambil subkategori
-      subcats = await fetchSubcats(token, mainId);
-
-      // Kalau gak ada subkategori, coba langsung ambil produk dari kategori utama
-      let all = [];
-      if(subcats.length === 0){
-        all = await fetchProductsByCategory(token, mainId);
-        document.getElementById("subInfo").textContent = "(tanpa sub_kategori)";
-      } else {
-        document.getElementById("subInfo").textContent = "(sub_kategori: " + subcats.length + ")";
-        // 2) Ambil produk dari tiap subkategori (misal 2)
-        for(const s of subcats){
-          const pid = s.id_kategori;
-          const arr = await fetchProductsByCategory(token, pid);
-          all = all.concat(arr);
-        }
-      }
-
-      // 3) Deduplicate by nama_produk normalized
-      const map = new Map();
-      for(const p of all){
-        const n = norm(p?.nama_produk);
-        if(!n) continue;
-        if(!map.has(n)) map.set(n, p);
-      }
-      products = Array.from(map.values()).sort((a,b)=> (a.harga_produk||0) - (b.harga_produk||0));
-
-      document.getElementById("totalAll").textContent = String(products.length);
-
-      // 4) Refresh status dari Upstash biar tombol nyambung
-      await refreshStatus();
-
-      toast("Produk berhasil diload", "ok");
-    }catch(e){
-      toast(String(e.message || e), "err");
-      console.error(e);
+    const pr = await fetch(url, { cache:"no-store" });
+    const pj = await pr.json();
+    if(pr.ok && pj && Array.isArray(pj.data)){
+      products = products.concat(pj.data);
     }
   }
 
-  function getStatusForProduct(p){
-    const n = norm(p?.nama_produk);
-    return (statusMap[n] || "ON").toString().toUpperCase();
+  const seen = new Set();
+  const uniq = [];
+  for(const p of products){
+    const key = normNameClient(p.nama_produk || "");
+    if(!key) continue;
+    if(seen.has(key)) continue;
+    seen.add(key);
+    uniq.push(p);
   }
+  uniq.sort((a,b)=> (a.nama_produk||"").localeCompare(b.nama_produk||""));
+  ALL_PRODUCTS = uniq;
+}
 
-  async function setOne(p, status){
-    const nama_produk = p?.nama_produk || "";
-    await postJSON(BASE + "/api/set", { nama_produk, status });
-    // update lokal biar UI langsung berubah
-    statusMap[norm(nama_produk)] = status;
-  }
+/* ===== Render ===== */
+function render(){
+  const q = (searchEl.value || "").toLowerCase().trim();
+  const filtered = ALL_PRODUCTS.filter(p => (p.nama_produk||"").toLowerCase().includes(q));
 
-  async function setAll(status){
-    try{
-      if(products.length === 0) return toast("Tidak ada data. Klik Load Produk dulu.", "err");
+  statTextEl.textContent = `Total Produk: ${ALL_PRODUCTS.length} • Ditampilkan: ${filtered.length}` + (SUB_COUNT ? ` (sub_kategori: ${SUB_COUNT})` : "");
 
-      toast("Proses " + status + " semua...", "info");
+  listEl.innerHTML = "";
+  filtered.forEach(p => {
+    const name = p.nama_produk || "";
+    const key = normNameClient(name);
+    const st = (STATUS_MAP[key] || "ON").toUpperCase();
 
-      // jalanin berurutan biar aman (kalau mau lebih cepat, bisa bikin parallel nanti)
-      for(const p of products){
-        await setOne(p, status);
-      }
+    const card = document.createElement("div");
+    card.className = "prod";
+    card.innerHTML = `
+      <div style="min-width:0;flex:1;">
+        <p class="name">${escapeHtml(name)}</p>
+        <div class="meta">${escapeHtml(p.nama_kategori || "")}</div>
+      </div>
 
-      render();
-      toast("Berhasil " + status + " semua", "ok");
-    }catch(e){
-      toast(String(e.message || e), "err");
-      console.error(e);
+      <div class="actions">
+        <span class="status-chip ${st === "ON" ? "st-on" : "st-off"}">${st}</span>
+        <button class="btn btnx btn-bad btn-small" data-action="off"><i class="fa-solid fa-ban"></i> OFF</button>
+        <button class="btn btnx btn-ok btn-small" data-action="on"><i class="fa-solid fa-power-off"></i> ON</button>
+      </div>
+    `;
+
+    const btnOff = card.querySelector('[data-action="off"]');
+    const btnOn  = card.querySelector('[data-action="on"]');
+
+    btnOff.addEventListener("click", async ()=>{
+      try{
+        setLoadingDash(true);
+        await apiSetStatus(name, "OFF");
+        STATUS_MAP[key] = "OFF";
+        render();
+      }catch(e){ alert(e.message || e); }
+      finally{ setLoadingDash(false); }
+    });
+
+    btnOn.addEventListener("click", async ()=>{
+      try{
+        setLoadingDash(true);
+        await apiSetStatus(name, "ON");
+        STATUS_MAP[key] = "ON";
+        render();
+      }catch(e){ alert(e.message || e); }
+      finally{ setLoadingDash(false); }
+    });
+
+    listEl.appendChild(card);
+  });
+}
+
+/* ===== Event: Toggle show/hide admin key ===== */
+btnToggleKey.addEventListener("click", ()=>{
+  const isPass = adminKeyEl.type === "password";
+  adminKeyEl.type = isPass ? "text" : "password";
+  btnToggleKey.innerHTML = isPass
+    ? '<i class="fa-solid fa-eye-slash"></i>'
+    : '<i class="fa-solid fa-eye"></i>';
+});
+
+/* ===== Login Flow ===== */
+btnLogin.addEventListener("click", async ()=>{
+  const key = (adminKeyEl.value || "").trim();
+  if(!key) return alert("Admin key wajib diisi");
+
+  try{
+    setLoadingLogin(true);
+    const v = await verifyAdminKey(key);
+    if(!v.ok){
+      setLockedUI(true);
+      return alert(v.msg || "Admin key salah");
     }
+
+    // simpan session
+    sessionStorage.setItem(SESSION_KEY, key);
+    setLockedUI(false);
+    showDashboard();
+  }catch(e){
+    setLockedUI(true);
+    alert(e.message || e);
+  }finally{
+    setLoadingLogin(false);
   }
+});
 
-  function render(){
-    const list = document.getElementById("list");
-    const q = norm(document.getElementById("q").value);
+btnClear.addEventListener("click", ()=>{
+  adminKeyEl.value = "";
+  sessionStorage.removeItem(SESSION_KEY);
+  setLockedUI(true);
+});
 
-    list.innerHTML = "";
+/* ===== Logout ===== */
+btnLogout.addEventListener("click", ()=>{
+  if(!confirm("Logout dari dashboard?")) return;
+  sessionStorage.removeItem(SESSION_KEY);
+  ALL_PRODUCTS = [];
+  STATUS_MAP = {};
+  SUB_COUNT = 0;
+  listEl.innerHTML = "";
+  searchEl.value = "";
+  statTextEl.textContent = "Total Produk: 0 • Ditampilkan: 0";
+  subInfoEl.innerHTML = '<i class="fa-solid fa-layer-group"></i> sub_kategori: -';
+  showLogin();
+  setLockedUI(true);
+});
 
-    const filtered = products.filter(p => norm(p?.nama_produk).includes(q));
-    document.getElementById("totalShown").textContent = String(filtered.length);
+/* ===== Dashboard Buttons ===== */
+btnLoad.addEventListener("click", async ()=>{
+  try{
+    setLoadingDash(true);
+    await loadAllProducts();
+    STATUS_MAP = await apiListStatus();
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
 
-    if(filtered.length === 0){
-      list.innerHTML = `<div class="text-muted">Tidak ada data. Klik <b>Load Produk</b> dulu.</div>`;
-      return;
-    }
+btnRefresh.addEventListener("click", async ()=>{
+  try{
+    setLoadingDash(true);
+    STATUS_MAP = await apiListStatus();
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
 
+btnOffAll.addEventListener("click", async ()=>{
+  if(!confirm("Yakin OFF semua produk yang tampil?")) return;
+  try{
+    setLoadingDash(true);
+    const q = (searchEl.value || "").toLowerCase().trim();
+    const filtered = ALL_PRODUCTS.filter(p => (p.nama_produk||"").toLowerCase().includes(q));
     for(const p of filtered){
-      const nm = p?.nama_produk || "-";
-      const stat = getStatusForProduct(p); // ON/OFF
+      await apiSetStatus(p.nama_produk, "OFF");
+      STATUS_MAP[normNameClient(p.nama_produk)] = "OFF";
+    }
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
 
-      const div = document.createElement("div");
-      div.className = "cardx";
+btnOnAll.addEventListener("click", async ()=>{
+  if(!confirm("Yakin ON semua produk yang tampil?")) return;
+  try{
+    setLoadingDash(true);
+    const q = (searchEl.value || "").toLowerCase().trim();
+    const filtered = ALL_PRODUCTS.filter(p => (p.nama_produk||"").toLowerCase().includes(q));
+    for(const p of filtered){
+      await apiSetStatus(p.nama_produk, "ON");
+      STATUS_MAP[normNameClient(p.nama_produk)] = "ON";
+    }
+    render();
+  }catch(e){
+    alert(e.message || e);
+  }finally{
+    setLoadingDash(false);
+  }
+});
 
-      div.innerHTML = `
-        <div class="rowx">
-          <div class="me-2" style="flex:1;">
-            <p class="nm">${escapeHtml(nm)}</p>
-            <p class="sub">${escapeHtml(p?.nama_kategori || "")}</p>
-          </div>
+searchEl.addEventListener("input", render);
 
-          <div class="text-end" style="min-width:140px;">
-            <div class="mb-2">
-              <span class="pill ${stat==="ON" ? "on" : "off"}">${stat}</span>
-            </div>
-            <div class="d-flex gap-2 justify-content-end">
-              <button class="btn btn-sm btn-outline-danger btnx" data-act="off">OFF</button>
-              <button class="btn btn-sm btn-outline-success btnx" data-act="on">ON</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      div.querySelector('[data-act="off"]').addEventListener("click", async ()=>{
-        try{ await setOne(p, "OFF"); render(); toast("OFF: " + nm, "ok"); }
-        catch(e){ toast(String(e.message||e), "err"); }
-      });
-
-      div.querySelector('[data-act="on"]').addEventListener("click", async ()=>{
-        try{ await setOne(p, "ON"); render(); toast("ON: " + nm, "ok"); }
-        catch(e){ toast(String(e.message||e), "err"); }
-      });
-
-      list.appendChild(div);
+/* ===== Auto-login jika ada session ===== */
+(async function init(){
+  const saved = sessionStorage.getItem(SESSION_KEY);
+  if(saved){
+    adminKeyEl.value = saved;
+    try{
+      setLoadingLogin(true);
+      const v = await verifyAdminKey(saved);
+      if(v.ok){
+        setLockedUI(false);
+        showDashboard();
+        return;
+      }
+    }catch(e){}
+    finally{
+      setLoadingLogin(false);
     }
   }
-
-  function escapeHtml(s){
-    return (s||"").toString()
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
+  setLockedUI(true);
+  showLogin();
+})();
 </script>
 </body>
 </html>
