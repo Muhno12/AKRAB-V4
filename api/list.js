@@ -1,26 +1,16 @@
-export function normName(s) {
-  return (s || "")
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
+import { Redis } from "@upstash/redis";
+const redis = Redis.fromEnv();
 
-export function deny(res, code, msg) {
-  res.status(code).json({ ok: false, msg });
-}
-
-export function requireAdminKey(req, res) {
-  const got = req.headers["x-admin-key"];
-  const want = process.env.ADMIN_KEY;
-
-  if (!want) {
-    deny(res, 500, "ADMIN_KEY belum diset di Vercel env");
-    return false;
+export default async function handler(req, res) {
+  try {
+    const keys = await redis.keys("prod:*");
+    const out = {};
+    for (const k of keys) {
+      const val = await redis.get(k);
+      out[k.replace("prod:", "")] = (val || "ON").toString().toUpperCase();
+    }
+    res.status(200).json({ ok: true, data: out });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: String(e) });
   }
-  if (!got || got !== want) {
-    deny(res, 401, "Unauthorized (admin key salah)");
-    return false;
-  }
-  return true;
 }
