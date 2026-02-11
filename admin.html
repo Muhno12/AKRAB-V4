@@ -13,6 +13,9 @@
     .pill{ font-size:11px;font-weight:900;border-radius:999px;padding:4px 10px;display:inline-block; }
     .on{ background:#e7ffe8;color:#0a7a12;border:1px solid #c9f5cc; }
     .off{ background:#ffe9e9;color:#a50f0f;border:1px solid #ffd0d0; }
+    .rowx{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .btn-mini{ padding:6px 10px; font-size:12px; font-weight:900; border-radius:10px; }
+    .muted{ color:#888; font-size:12px; }
   </style>
 </head>
 <body class="p-3">
@@ -33,6 +36,7 @@
         <div class="col-12">
           <label class="form-label">Admin Key</label>
           <input id="adminKey" class="form-control" placeholder="Masukkan ADMIN_KEY (sama seperti env di Vercel)">
+          <div class="muted mt-1">Tip: ADMIN_KEY ini harus sama persis dengan ENV <b>ADMIN_KEY</b> di Vercel.</div>
         </div>
         <div class="col-12 d-flex gap-2 mt-1">
           <button class="btn btn-primary w-100" onclick="loadAll()">Load Produk</button>
@@ -43,6 +47,9 @@
 
     <div class="cardx mb-2">
       <input id="q" class="form-control" placeholder="Cari nama produk..." oninput="render()">
+      <div class="muted mt-2">
+        Total produk: <b id="countProd">0</b> • ON: <b id="countOn">0</b> • OFF: <b id="countOff">0</b>
+      </div>
     </div>
 
     <div class="d-flex gap-2 mb-2">
@@ -54,25 +61,37 @@
   </div>
 
 <script>
-  const BASE = ""; // karena api & halaman sama-sama di Vercel
+  // karena api & halaman sama-sama di Vercel
+  const BASE = "";
 
-  let products = [];
-  let statusMap = {};
+  let products = [];     // [{ nama_produk, id_produk, ... }]
+  let statusMap = {};    // { normName: "ON"/"OFF" }
 
-  function norm(s){ return (s||"").toLowerCase().replace(/\s+/g," ").trim(); }
+  function norm(s){ return (s||"").toString().toLowerCase().replace(/\s+/g," ").trim(); }
+
+  // ========== SAFE JSON PARSER (biar gak error "Unexpected token A") ==========
+  async function fetchJSONSafe(url, opt){
+    const r = await fetch(url, opt);
+    const txt = await r.text(); // bisa jadi html kalau error
+    let j;
+    try { j = JSON.parse(txt); }
+    catch {
+      // tampilkan 120 char awal biar keliatan errornya apa
+      throw new Error(`Response bukan JSON (${r.status}). Awal: ${txt.slice(0,120)}`);
+    }
+    if(!r.ok || j?.ok === false) throw new Error(j?.msg || j?.error || "Error");
+    return j;
+  }
 
   async function getJSON(url){
-    const r = await fetch(url);
-    const j = await r.json();
-    if(!r.ok || j?.ok === false) throw new Error(j?.msg || "Error");
-    return j;
+    return fetchJSONSafe(url);
   }
 
   async function postJSON(url, body){
     const key = document.getElementById("adminKey").value.trim();
     if(!key) throw new Error("Admin Key wajib diisi");
 
-    const r = await fetch(url, {
+    return fetchJSONSafe(url, {
       method:"POST",
       headers:{
         "Content-Type":"application/json",
@@ -80,58 +99,130 @@
       },
       body: JSON.stringify(body)
     });
-    const j = await r.json();
-    if(!r.ok || j?.ok === false) throw new Error(j?.msg || "Error");
-    return j;
   }
 
-  function toast(msg){
+  function toast(msg, type="info"){
     const d = document.createElement("div");
-    d.className = "alert alert-info p-2";
+    d.className = `alert alert-${type} p-2`;
     d.style.position="fixed"; d.style.right="12px"; d.style.top="12px"; d.style.zIndex=9999;
     d.style.fontSize="13px"; d.style.fontWeight="900";
     d.textContent = msg;
     document.body.appendChild(d);
-    setTimeout(()=>d.remove(), 1200);
+    setTimeout(()=>d.remove(), 1500);
+  }
+
+  function setCounters(){
+    const total = products.length;
+    let on = 0, off = 0;
+    for(const p of products){
+      const st = statusMap[norm(p.nama_produk)] || "ON";
+      if(st === "OFF") off++; else on++;
+    }
+    document.getElementById("countProd").textContent = total;
+    document.getElementById("countOn").textContent = on;
+    document.getElementById("countOff").textContent = off;
   }
 
   async function refreshStatus(){
     const res = await getJSON(BASE + "/api/list");
     statusMap = res.data || {};
     render();
-    toast("Status di-refresh");
+    toast("Status di-refresh", "secondary");
   }
 
+  // ambil semua produk dari BukaOlshop (kategori + subkategori)
   async function loadAll(){
-    const tokenapi = document.getElementById("tokenapi").value.trim();
-    const idKategori = document.getElementById("idKategori").value.trim();
-    if(!tokenapi || !idKategori) return alert("Token & ID kategori wajib");
+    try {
+      const token = document.getElementById("tokenapi").value.trim();
+      const idKategori = document.getElementById("idKategori").value.trim();
+      if(!token) throw new Error("Token API wajib");
+      if(!idKategori) throw new Error("ID Kategori wajib");
 
-    await refreshStatus();
+      toast("Loading kategori...", "info");
 
-    const cats = await getJSON("https://openapi.bukaolshop.net/v1/app/kategori?token=" + encodeURIComponent(tokenapi));
-    const cat = (cats.data || []).find(x => String(x.id_kategori) === String(idKategori));
-    if(!cat) return alert("Kategori tidak ditemukan");
+      // 1) ambil kategori untuk dapat sub_kategori dari kategori utama
+      const catUrl = `https://openapi.bukaolshop.net/v1/app/kategori?token=${encodeURIComponent(token)}`;
+      const cat = await fetchJSONSafe(catUrl);
 
-    const subs = cat.sub_kategori || [];
-    if(subs.length === 0) return alert("Sub kategori kosong");
+      const main = (cat?.data || []).find(x => String(x.id_kategori) === String(idKategori));
+      const subs = main?.sub_kategori || [];
+      if(!subs.length) throw new Error("Sub kategori tidak ditemukan (cek ID Kategori)");
 
-    products = [];
-    for(const s of subs){
-      const prods = await getJSON("https://openapi.bukaolshop.net/v1/app/produk?token=" + encodeURIComponent(tokenapi) + "&total_data=250&id_kategori=" + s.id_kategori);
-      (prods.data || []).forEach(p => products.push({ nama: p.nama_produk || "", sub: s.nama_kategori || "" }));
+      // 2) ambil produk dari semua sub kategori
+      let all = [];
+      for (const s of subs) {
+        const pid = s.id_kategori;
+        const url = `https://openapi.bukaolshop.net/v1/app/produk?token=${encodeURIComponent(token)}&total_data=200&id_kategori=${encodeURIComponent(pid)}`;
+        const pr = await fetchJSONSafe(url);
+        const arr = pr?.data || [];
+        all = all.concat(arr);
+      }
+
+      // hilangkan duplikat berdasarkan nama_produk (lebih aman daripada id)
+      const seen = new Set();
+      products = [];
+      for(const p of all){
+        const k = norm(p.nama_produk);
+        if(!k) continue;
+        if(seen.has(k)) continue;
+        seen.add(k);
+        products.push(p);
+      }
+
+      // sort alfabet
+      products.sort((a,b)=> norm(a.nama_produk).localeCompare(norm(b.nama_produk)));
+
+      await refreshStatus(); // sekaligus update statusMap + render
+      toast(`Loaded ${products.length} produk`, "success");
+    } catch(e){
+      console.error(e);
+      toast("Gagal: " + e.message, "danger");
+      alert("Gagal: " + e.message);
     }
+  }
 
-    const seen = new Set();
-    products = products.filter(p => {
-      const k = norm(p.nama);
-      if(!k || seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    }).sort((a,b)=>a.nama.localeCompare(b.nama));
+  // set status 1 produk
+  async function setOne(nama_produk, status){
+    await postJSON(BASE + "/api/set", { nama_produk, status });
+    statusMap[norm(nama_produk)] = status;
+  }
 
-    render();
-    toast("Produk berhasil di-load");
+  // OFF/ON semua
+  async function setAll(status){
+    try {
+      if(!products.length) {
+        alert("Produk masih kosong. Klik Load Produk dulu.");
+        return;
+      }
+      toast(`Proses ${status} semua...`, "warning");
+
+      // jalan satu-satu biar stabil (mobile & rate-limit aman)
+      for(const p of products){
+        await setOne(p.nama_produk, status);
+      }
+
+      render();
+      toast(`Berhasil ${status} semua`, "success");
+    } catch(e){
+      console.error(e);
+      toast("Gagal: " + e.message, "danger");
+      alert("Gagal: " + e.message);
+    }
+  }
+
+  // toggle satu item
+  async function toggleOne(nama_produk){
+    try{
+      const cur = statusMap[norm(nama_produk)] || "ON";
+      const next = (cur === "ON") ? "OFF" : "ON";
+      await setOne(nama_produk, next);
+      render();
+      toast(`${next}: ${nama_produk}`, next === "ON" ? "success" : "danger");
+    }catch(e){
+      console.error(e);
+      toast("Gagal: " + e.message, "danger");
+      alert("Gagal: " + e.message);
+    }
   }
 
   function render(){
@@ -139,61 +230,51 @@
     const list = document.getElementById("list");
     list.innerHTML = "";
 
-    const filtered = products.filter(p => norm(p.nama).includes(q));
-    if(filtered.length === 0){
-      list.innerHTML = `<div class="text-center text-muted mt-3">Belum ada data. Klik "Load Produk".</div>`;
+    const filtered = products.filter(p => norm(p.nama_produk).includes(q));
+    if(!filtered.length){
+      list.innerHTML = `<div class="cardx text-center text-muted" style="font-size:13px;">Tidak ada data. Klik <b>Load Produk</b>.</div>`;
+      setCounters();
       return;
     }
 
-    filtered.forEach(p => {
-      const key = norm(p.nama);
-      const st = (statusMap[key] || "ON").toUpperCase();
-      const checked = st === "ON" ? "checked" : "";
+    for(const p of filtered){
+      const nm = p.nama_produk || "";
+      const st = (statusMap[norm(nm)] || "ON").toString().toUpperCase();
+      const pillClass = st === "OFF" ? "pill off" : "pill on";
 
       const row = document.createElement("div");
       row.className = "cardx mb-2";
+
       row.innerHTML = `
-        <div class="d-flex align-items-center justify-content-between gap-3">
-          <div style="min-width:0;">
-            <p class="nm">${p.nama}</p>
-            <p class="sub">${p.sub} • <span class="pill ${st==='ON'?'on':'off'}">${st}</span></p>
+        <div class="rowx">
+          <div style="min-width:0;flex:1;">
+            <p class="nm">${nm}</p>
+            <p class="sub m-0">Status: <span class="${pillClass}">${st}</span></p>
           </div>
-          <div class="form-check form-switch m-0">
-            <input class="form-check-input" type="checkbox" ${checked}>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-mini" onclick="copyName(${JSON.stringify(nm)})">Copy</button>
+            <button class="btn ${st==="OFF" ? "btn-outline-success" : "btn-outline-danger"} btn-mini"
+              onclick="toggleOne(${JSON.stringify(nm)})">
+              ${st==="OFF" ? "ON" : "OFF"}
+            </button>
           </div>
         </div>
       `;
-
-      const sw = row.querySelector("input");
-      sw.onchange = async () => {
-        const newStatus = sw.checked ? "ON" : "OFF";
-        sw.disabled = true;
-        try{
-          await postJSON(BASE + "/api/set", { nama_produk: p.nama, status: newStatus });
-          statusMap[key] = newStatus;
-          render();
-          toast("Simpan: " + newStatus);
-        }catch(e){
-          alert("Gagal: " + e.message);
-          sw.checked = !sw.checked;
-        }finally{
-          sw.disabled = false;
-        }
-      };
-
       list.appendChild(row);
-    });
+    }
+
+    setCounters();
   }
 
-  async function setAll(status){
-    if(!products.length) return alert("Load produk dulu");
-    if(!confirm("Yakin " + status + " semua produk?")) return;
-
-    const items = products.map(p => ({ nama_produk: p.nama, status }));
-    await postJSON(BASE + "/api/bulk", { items });
-    await refreshStatus();
-    toast(status + " semua");
+  function copyName(nm){
+    navigator.clipboard?.writeText(nm);
+    toast("Nama dicopy", "secondary");
   }
+
+  // load awal: hanya refresh status (produk belum ada)
+  (async () => {
+    try { await refreshStatus(); } catch(e) {}
+  })();
 </script>
 </body>
 </html>
